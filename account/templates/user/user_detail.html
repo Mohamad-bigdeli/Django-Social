@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>UserDetail</title>
+   </head>
+   <body>
+    <h3><a href="{% url 'social:home' %}">Home</a>  </h3>
+    <br> <br>
+    {% if user.photo %}
+    <a href="{{user.photo.url}}">
+        <img width="200px" height="80px" src="{{user.photo.url}}">
+    </a>
+    {% else %}
+    <img width="200px" height="100px" src="{% static 'images/avatar.png' %}">
+    {% endif %}
+    <h1>{{user.get_username}}</h1>
+    {% if user.job %}
+    <h3>{{user.job}}</h3>
+    {% endif %}
+    {% if user.bio %}
+    <h4>{{user.bio}}</h4>
+    {% endif %}
+    <br> {% if request.user == user %}
+    {% else %}  
+      <button class="follow-button">
+        {% if request.user in user.followers.all %}
+        Unfollow
+        {% else %}
+        Follow
+        {% endif %}
+    </button>
+    {% endif %}
+    <br>
+    <span class="followers-count">{{user.followers.count}}Follower{{user.followers.count|pluralize}}</span>
+    <span class="following-count">{{user.following.count}}Following{{user.following.count|pluralize}}</span>
+    <h1>{{user.get_username}} Posts</h1>
+{% for post in posts %}
+<br>
+<a href="{{post.get_absolute_url}}">{{ post.caption|truncatewords:20|linebreaks }}</a>
+<p>
+    {% for img in post.images.all %}
+    <img width="250px" height="100px" src="{{ img.image_file.url }}">
+</p>
+    <br>
+______________________________________
+<br>
+    {% endfor %}
+    {% endfor %}
+   </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    
+<script>
+    $(document).ready(function(){
+        $('.follow-button').click(function(){
+            var button = $(this);
+            $.ajax({
+                type:'POST',
+                url:"{% url 'account:user_follow' %}",
+                data:{'id':'{{user.id}}', 'csrfmiddlewaretoken':'{{csrf_token}}'},
+                success:function(data){
+                    if (data.follow){
+                        button.text('Follow');
+                    }else{
+                        button.text('Unfollow');
+                    }
+                    $('.followers_count').text(data.followers_count+'Follower{{user.followers.count|pluralize}}');
+                    $('.followings_count').text(datafollowings_count+'Following{{user.following.count|pluralize}}');
+                },
+            });
+        });
+    });
+</script>
+</html> 

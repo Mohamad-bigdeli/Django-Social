@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Users</title>
+   </head>
+   <body>
+    <h3><a href="{% url 'social:home' %}">Home</a>  </h3>
+   <br>
+   <br>
+    {% for user in users %}
+    {% if user.photo %}
+    <a href="{{user.get_absolute_url}}">
+        <img width="200px" height="80px" src="{{user.photo.url}}">
+    </a>
+    {% else %}
+    <a href="{{user.get_absolute_url}}">
+      <img width="200px" height="100px" src="{% static 'images/avatar.png' %}">
+   </a>
+    {% endif %}
+    <a href="{{user.get_absolute_url}}">{{user.get_username}}</a>
+    <br> <br>  <br>
+    {% endfor %}
+   </body>
+</html>

@@ -1,0 +1,44 @@
+{% extends 'parent/base.html' %}
+{% load static %}
+{% block title %}
+Profile
+{% endblock %}
+<br>
+<br>
+{% block content %}
+<h1>Profile</h1>
+<br>
+{% if request.user.photo %}
+<a href="{{request.user.photo.url}}">
+    <img width="225px" height="80px" src="{{request.user.photo.url}}">
+</a>
+{% else %}
+<img src="{% static 'images/avatar.png' %}">
+{% endif %}
+<br>
+<h2>{{user.get_full_name}}</h2>
+<a href="{% url 'account:edit_user' %}">edit profile</a>   -   <a href="{% url 'social:create_post' %}">create post</a>  
+<br>
+<h4>your information</h4>
+<p>
+    username : {{user.username}} <br>
+    bio : {{user.bio}} <br>
+    job : {{user.job}} <br>
+    date of birth : {{user.date_of_birth}} <br>
+    phone : {{user.phone}} <br>
+    email : {{user.email}} <br>
+</p>
+<h4>My posts</h4>
+{% for post in posts %}
+<p>
+<a href="{{post.get_absolute_url}}">{{ post.caption|truncatewords:20|linebreaks }}</a>
+</p>
+<br>
+{% empty %}
+you not have post
+{% endfor %}
+{% endblock %}
+    
+
+
+      

@@ -1,0 +1,19 @@
+<form action="{% url 'social:post_search' %}" method="get">
+    {%csrf_token%}
+<button type="submit">search</button>
+<input type="text" placeholder="Search">
+</form>
+<br>
+<a href="{% url 'social:home' %}">Home</a>
+<br>
+{% if request.user.is_authenticated %}
+ Welcome {{request.user.fristname|default:request.user.username}}
+{{post.author.job}}
+{%endif%}
+<br>
+{% if request.user.is_authenticated %}
+<a href="{% url 'social:profile' %}">Profile({{request.user.fristname|default:request.user.username}})</a>
+{% else %}
+<a href="{% url 'account:login' %}">Login or Register</a>
+{%endif%}
+<a href="{% url 'account:logout' %}">Logout</a>
